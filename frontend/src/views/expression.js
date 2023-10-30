@@ -11,7 +11,6 @@ const Expression = () => {
   const navigate = useNavigate();    
   const mainUrl = "expressions/";    
   const [expression, setExpression] = useState('');        
-  const [url, setUrl] = useState(mainUrl);
   const [errorMessage, setErrorMessage] = useState('');
   const [apiData, setApiData] = useState({
     expressionList: [],
@@ -20,10 +19,10 @@ const Expression = () => {
   });
 
   useEffect(() => {
-    refreshList(url);
+    refreshList(mainUrl);
   }, []);  
 
-  const refreshList = (url) => {
+  const refreshList = async (url) => {
     api
       .get(url)
       .then((res) => setApiData({
@@ -40,21 +39,19 @@ const Expression = () => {
     if (errorMessage) setErrorMessage("");
   };
 
-  const handleSubmit = () => {
-    let that = this;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (expression) {
       api.post(mainUrl, { expression: expression })
-      .then((res) => refreshList(url))
+      .then((res) => refreshList(mainUrl))
       .catch(function (error) {
         let message = "";      
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
-          console.log(error.response.status);
-          // console.log(error.response.headers);
-          console.log(error.response);
-          console.log(error.response.data);
-          if (error.response.status == 400 && error.response.data.expression) {
+          // console.log(error.response.status);
+          // console.log(error.response.data);
+          if (error.response.status == 400 && error.response.data && error.response.data.expression) {
             message = error.response.data.expression[0];
           } else {
             message = error.response.statusText;
@@ -92,14 +89,6 @@ const Expression = () => {
     navigate("/login");
   };
     
-  const renderError = () => {
-    return (
-      <div className="alert alert-danger">
-        {errorMessage}
-      </div>
-    );
-  };
-    
   const renderItems = () => {
     return apiData.expressionList.map((item) => (
       <li
@@ -116,20 +105,6 @@ const Expression = () => {
     ));
   };
 
-  const renderPagination = () => {
-    return (
-      <div className="my-4">
-        {apiData.previousUrl ? (            
-          <button className={`btn btn-primary`} onClick={handlePrevious}>Previous</button>
-        ) : null}
-        {apiData.nextUrl ? (
-          <button className={`btn btn-primary float-right`} onClick={handleNext} >Next</button>
-        ) : null}                
-      </div>
-    );
-  };
-
-  console.log("render");
   return (
     <main className="container">
       <h1 className="text-uppercase text-center my-4">
@@ -143,16 +118,25 @@ const Expression = () => {
             {errorMessage ? (
               <Alert color="danger">{errorMessage}</Alert>
             ) : null}
-            <div className="input-group mb-3">
-              <input type="text" className="form-control" placeholder="" name="expression" onChange={handleChange} />
-              <div className="input-group-append">
-                <button className="btn btn-primary" onClick={handleSubmit} >Evaluate</button>
+            <form onSubmit={handleSubmit}>
+              <div className="input-group mb-3">
+                <input type="text" className="form-control" placeholder="" name="expression" onChange={handleChange} />
+                <div className="input-group-append">
+                  <button className="btn btn-primary" onClick={handleSubmit} >Evaluate</button>
+                </div>
               </div>
-            </div>
+            </form>
             <ul className="list-group list-group-flush border-top-0">
               {renderItems()}
             </ul>
-            {renderPagination()}
+            <div className="my-4">
+              {apiData.previousUrl ? (
+                <button className={`btn btn-primary`} onClick={handlePrevious}>Previous</button>
+              ) : null}
+              {apiData.nextUrl ? (
+                <button className={`btn btn-primary float-right`} onClick={handleNext} >Next</button>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
