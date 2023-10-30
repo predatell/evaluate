@@ -1,0 +1,19 @@
+# pull official base image
+FROM python:3.10-alpine
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# set work directory
+WORKDIR /backend
+
+# install python dependencies
+COPY requirements.txt /backend/requirements.txt
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+# copy from the current directory of the Dockerfile to /backend in the image
+COPY . . 
+
+EXPOSE 8000
