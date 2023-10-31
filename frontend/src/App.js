@@ -1,6 +1,3 @@
-import { useState, useEffect } from 'react';
-import axios from "axios";
-
 import './App.css';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import Expression from './views/expression';

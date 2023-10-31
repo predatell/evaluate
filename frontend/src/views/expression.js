@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import { useEffect, useState } from 'react';
 import useAxios from "../utils/useAxios";
 import { logout } from '../utils/auth';
@@ -34,8 +33,7 @@ const Expression = () => {
   };
 
   const handleChange = (e) => {
-    let { name, value } = e.target;
-    setExpression(value);
+    setExpression(e.target.value);
     if (errorMessage) setErrorMessage("");
   };
 
@@ -51,7 +49,7 @@ const Expression = () => {
           // that falls out of the range of 2xx
           // console.log(error.response.status);
           // console.log(error.response.data);
-          if (error.response.status == 400 && error.response.data && error.response.data.expression) {
+          if (error.response.status === 400 && error.response.data && error.response.data.expression) {
             message = error.response.data.expression[0];
           } else {
             message = error.response.statusText;

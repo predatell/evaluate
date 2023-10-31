@@ -49,7 +49,7 @@ function Register() {
             ) : null}
             {password2 !== password ? (
               <Alert color="danger">Passwords don't match</Alert>
-            ): ''}      
+            ): ''}
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label htmlFor="username">Username</label>
@@ -57,7 +57,7 @@ function Register() {
                   type="text"
                   className="form-control"
                   name="username"
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => { setUsername(e.target.value); setErrorMessage(""); }}
                   placeholder="Username"
                   required
                   />
@@ -68,7 +68,7 @@ function Register() {
                   type="password"
                   name="password"
                   className="form-control"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => { setPassword(e.target.value); setErrorMessage(""); }}
                   placeholder="Password"
                   required
                 />
@@ -79,13 +79,10 @@ function Register() {
                   type="password"
                   name="password2"
                   className="form-control"
-                  onChange={(e) => setPassword2(e.target.value)}
+                  onChange={(e) => { setPassword2(e.target.value); setErrorMessage(""); } }
                   placeholder="Confirm Password"
                   required
                 />
-                <p>
-
-                </p>
               </div>
               <div className="d-grid">
                 <button type="submit" className="btn btn-primary btn-block">Register</button>
